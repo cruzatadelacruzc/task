@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html
+  html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.thymeleaf.org"
+  th:lang="${#locale.language}"
+  lang="en"
+>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="#{index.title}">User info</title>
+    <style>
+      ::-moz-selection {
+        background: #b3d4fc;
+        text-shadow: none;
+      }
+
+      ::selection {
+        background: #b3d4fc;
+        text-shadow: none;
+      }
+
+      html {
+        padding: 30px 10px;
+        font-size: 20px;
+        line-height: 1.4;
+        color: #737373;
+        background: #3e8acc;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        max-width: 1000px;
+        _width: 500px;
+        padding: 30px 20px 50px;
+        border: 1px solid #b3b3b3;
+        border-radius: 4px;
+        margin: 0 auto;
+        box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 #fff;
+        background: #fcfcfc;
+      }
+      p {
+        margin: 1em 0;
+      }
+
+      h2,
+      h5 {
+        color: #969494;
+      }
+
+      h1 {
+        color: #7c7a7a;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+      }
+
+      pre {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        background: none;
+        border: none;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+      }
+      pre button {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+
+        font-size: 0.6rem;
+        padding: 0.15rem;
+        background-color: #828282;
+
+        border: ridge 1px #7b7b7c;
+        border-radius: 5px;
+        text-shadow: #c4c4c4 0 0 2px;
+      }
+      pre button:hover {
+        cursor: pointer;
+        background-color: #bcbabb;
+      }
+      .code-block {
+        background-color: #f1f1f1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .code-block code {
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        color: #333;
+        white-space: pre-wrap; /* Preserve line breaks */
+        word-break: break-all;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 th:text="#{index.welcome}"></h1>
+      <h2 style="padding-top: 8px; margin-left: 5px" th:text="${name}"></h2>
+    </div>
+
+    <div class="container">
+      <h4 th:text="#{index.email}"></h4>
+      <h5 style="margin-left: 5px" th:text="${email}"></h5>
+    </div>
+    <a th:text="#{index.link}" th:href="@{/graphiql}">Go to GraphIql</a>
+
+    <p th:text="#{index.accessToken}">Access Token:</p>
+    <div class="code-block">
+      <pre>
+            <code th:text="${accessToken}"></code>
+        </pre>
+    </div>
+  </body>
+  <script th:inline="javascript">
+    const copyButtonLabel = /*[[#{index.button.copy}]]*/ "Copy Code";
+    let block = document.querySelector("pre");
+    block.setAttribute("tabindex", 0);
+    // only add button if browser supports Clipboard API
+    if (navigator.clipboard) {
+      let button = document.createElement("button");
+
+      button.innerText = copyButtonLabel;
+      block.appendChild(button);
+
+      button.addEventListener("click", async () => {
+        await copyCode(block, button);
+      });
+    }
+    async function copyCode(block, button) {
+      let code = block.querySelector("code");
+      let text = code.innerText;
+
+      await navigator.clipboard.writeText(text);
+
+      // visual feedback that task is completed
+      button.innerText = /*[[#{index.button.copied}]]*/ "Code Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 1000);
+    }
+  </script>
+</html>
