@@ -138,7 +138,7 @@
 					<verbose>true</verbose>
 					<includeOnlyProperties>
 						<includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
-                        <includeOnlyProperty>^git.commit.id.describe$</includeOnlyProperty>
+						<includeOnlyProperty>^git.commit.id.describe$</includeOnlyProperty>
 						<includeOnlyProperty>^git.branch$</includeOnlyProperty>
 					</includeOnlyProperties>
 				</configuration>
@@ -211,6 +211,17 @@
 			<id>prod</id>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>build-info</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<groupId>io.github.git-commit-id</groupId>
 						<artifactId>git-commit-id-maven-plugin</artifactId>
