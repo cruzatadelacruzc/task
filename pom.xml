@@ -131,13 +131,12 @@
 					</execution>
 				</executions>
 				<configuration>
-					<!-- <failOnNoGitDirectory>false</failOnNoGitDirectory>
-					<failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo> -->
+					<failOnNoGitDirectory>false</failOnNoGitDirectory>
+					<failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
 					<verbose>true</verbose>
 					<includeOnlyProperties>
-						<includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
 						<includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
                         <includeOnlyProperty>^git.commit.id.describe$</includeOnlyProperty>
 						<includeOnlyProperty>^git.branch$</includeOnlyProperty>
@@ -203,14 +202,6 @@
 					<optional>true</optional>
 				</dependency>
 			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>io.github.git-commit-id</groupId>
-						<artifactId>git-commit-id-maven-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
 			<properties>
 				<!-- default Spring profiles -->
 				<spring.profiles.active>dev</spring.profiles.active>
