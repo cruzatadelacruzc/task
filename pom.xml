@@ -29,6 +29,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 		<dependency>
@@ -67,12 +71,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-docker-compose</artifactId>
-			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -121,6 +119,41 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>pre-unit-tests</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!-- Ensures that the code coverage report for unit tests is created after unit tests have been run -->
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>pre-integration-tests</id>
+						<goals>
+							<goal>prepare-agent-integration</goal>
+						</goals>
+					</execution>
+					<!-- Ensures that the code coverage report for integration tests is created after integration tests have been run -->
+					<execution>
+						<id>post-integration-tests</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report-integration</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>io.github.git-commit-id</groupId>
@@ -186,7 +219,6 @@
 						<exclude>**/*IntTest*</exclude>
 					</excludes>
 					<!-- Fix tests at java 13+ https://github.com/reactor/BlockHound/issues/33 -->
-					<!-- <argLine>@{argLine} -XX:+IgnoreUnrecognizedVMOptions -XX:+AllowRedefinitionToAddDeleteMethods</argLine> -->
 					<!-- <argLine>-XX:+AllowRedefinitionToAddDeleteMethods</argLine> -->
 				</configuration>
 			</plugin>
@@ -205,7 +237,44 @@
 					<scope>runtime</scope>
 					<optional>true</optional>
 				</dependency>
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-docker-compose</artifactId>
+					<scope>runtime</scope>
+					<optional>true</optional>
+				</dependency>
 			</dependencies>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<artifactId>maven-failsafe-plugin</artifactId>
+							<version>${maven-failsafe-plugin.version}</version>
+							<configuration>
+								<runOrder>alphabetical</runOrder>
+								<includes>
+									<include>**/*IT*</include>
+									<include>**/*IntTest*</include>
+								</includes>
+							</configuration>
+							<executions>
+								<execution>
+									<id>integration-test</id>
+									<goals>
+										<goal>integration-test</goal>
+									</goals>
+								</execution>
+								<execution>
+									<id>verify</id>
+									<goals>
+										<goal>verify</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
 			<properties>
 				<!-- default Spring profiles -->
 				<spring.profiles.active>dev</spring.profiles.active>
