@@ -12,6 +12,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import aleph.engineering.note.config.MongoDBTestContainer;
 import aleph.engineering.note.config.TestSecurityConfiguration;
 
+/**
+ * Base composite annotation for integration tests.
+ */
 @Target (ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest(classes = {NoteApplication.class, TestSecurityConfiguration.class, MongoDBTestContainer.class})
