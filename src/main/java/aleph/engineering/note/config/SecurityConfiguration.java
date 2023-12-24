@@ -8,18 +8,26 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
+import org.springframework.web.cors.reactive.CorsWebFilter;
 
-import aleph.engineering.note.security.CustomAccessDeniedHandler;
 import aleph.engineering.note.security.CustomAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfiguration {
+
+    private final CorsWebFilter corsWebFilter;
+
+    public SecurityConfiguration(CorsWebFilter corsWebFilter) {
+        this.corsWebFilter = corsWebFilter;
+    }
+
 
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
@@ -41,9 +49,8 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain managementSecurityFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .exceptionHandling(ex -> ex
-                                            .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                                            .accessDeniedHandler(new CustomAccessDeniedHandler()))                
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+                .addFilterAfter(corsWebFilter, SecurityWebFiltersOrder.REACTOR_CONTEXT)                
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .securityMatcher(new PathPatternParserServerWebExchangeMatcher("/management/**"))
                 .authorizeExchange(request -> request
