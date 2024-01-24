@@ -12,6 +12,8 @@ import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandle
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.zalando.problem.spring.webflux.advice.ProblemHandling;
+import org.zalando.problem.spring.webflux.advice.security.SecurityAdviceTrait;
 
 import graphql.GraphQLError;
 import graphql.schema.DataFetchingEnvironment;
@@ -23,7 +25,8 @@ import jakarta.validation.ConstraintViolationException;
  * json structures.
  */
 @ControllerAdvice
-public class ErrorHandler {
+public class ErrorHandler implements ProblemHandling, SecurityAdviceTrait {
+
 
      private final MessageSource messageSource;
 

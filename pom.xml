@@ -21,6 +21,7 @@
 		<maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
 		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
 		<git-commit-id-plugin.version>5.0.1</git-commit-id-plugin.version>
+		<problem-spring-webflux.version>0.29.1</problem-spring-webflux.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -111,6 +112,21 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.zalando</groupId>
+			<artifactId>problem-spring-webflux</artifactId>
+			<version>${problem-spring-webflux.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.zalando</groupId>
+			<artifactId>jackson-datatype-problem</artifactId>
+			<version>0.27.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -152,6 +168,27 @@
 						<goals>
 							<goal>report-integration</goal>
 						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>BUNDLE</element>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.85</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+							<dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
+						</configuration>						
 					</execution>
 				</executions>
 			</plugin>
