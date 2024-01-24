@@ -7,22 +7,27 @@ import java.util.Objects;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import aleph.engineering.note.IntegrationTest;
+import aleph.engineering.note.security.AuthoritiesConstants;
 
 /**
  * Integration tests for the {@link ErrorHandler} Controller Advice.
  */
 @IntegrationTest
+@AutoConfigureGraphQlTester
 public class ErrorHandlerIT {
 
     @Autowired
     private GraphQlTester graphQlTester;
 
     @Test
+    @WithMockUser(authorities = {AuthoritiesConstants.TASK_READ})
     void testHandleItemNotFoundException() {
         String dummyID = "task-does-not-exist";
         this.graphQlTester.document("{ task(id: \"" + dummyID + "\") { id body } }")
@@ -47,6 +52,7 @@ public class ErrorHandlerIT {
     }
 
     @Test
+    @WithMockUser(authorities = {AuthoritiesConstants.TASK_WRITE})
     void testHandleBadRequestException() {
         this.graphQlTester.document("mutation { create(input: { id: \"1\", body: \"Test Body\" } ) { id body } }")
         .execute()
