@@ -1,10 +1,8 @@
-package aleph.engineering.note.security;
+package aleph.engineering.note.config;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -15,23 +13,17 @@ import aleph.engineering.note.IntegrationTest;
 
 @IntegrationTest
 @AutoConfigureWebTestClient(timeout = IntegrationTest.DEFAULT_ENTITY_TIMEOUT)
-public class CustomAuthenticationEntryPointIT {
+public class SecurityConfigurationIT {
     
    @Autowired
     private WebTestClient webTestClient;
-    
-    @BeforeEach
-    public void setUp(ApplicationContext applicationContext) {
-        webTestClient = WebTestClient
-                        .bindToApplicationContext(applicationContext)
-                        .configureClient().baseUrl("/api/graphql").build();
-        webTestClient = webTestClient.mutateWith(csrf());
-    }
+   
 
     @Test
     void shouldReturnUnauthorizedWhenUserIsNotAuthenticated () {
 
-        webTestClient.post()
+        webTestClient.mutateWith(csrf()).post()
+                .uri("/api/graphql")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("{ \"query\": \"{ tasks { id body } }\"}")
                 .exchange()
@@ -42,7 +34,8 @@ public class CustomAuthenticationEntryPointIT {
     @Test
     void shouldReturnCustomMessageWhenUserIsNotAuthenticated () {
 
-        webTestClient.post()
+        webTestClient.mutateWith(csrf()).post()
+                .uri("/api/graphql")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("{ \"query\": \"{ tasks { id body } }\"}")
                 .exchange()
