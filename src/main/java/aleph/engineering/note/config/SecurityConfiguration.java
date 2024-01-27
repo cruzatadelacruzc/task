@@ -63,6 +63,7 @@ public class SecurityConfiguration {
                                             .pathMatchers("/api/management/health/**").permitAll()
                                             .pathMatchers("/api/management/**").authenticated()
                                             .anyExchange().authenticated())
+                .oauth2Login(Customizer.withDefaults())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }
