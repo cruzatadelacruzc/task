@@ -17,12 +17,7 @@ public class CookieCsrfFilterIT {
 
     @Test
     public void testCsrfTokenInCookie(ApplicationContext context) {
-        webTestClient = WebTestClient
-                        .bindToApplicationContext(context)
-                        .configureClient()
-                        .baseUrl("/api/account")
-                        .build();
-        webTestClient.get()
+        webTestClient.get().uri("/api/account")
             .exchange()
             .expectStatus().isUnauthorized()
             .expectHeader().valueMatches("Set-Cookie", "XSRF-TOKEN=(.*?);.*");       
