@@ -46,23 +46,11 @@ public class AccountResource {
     @GetMapping("/api/account")
     public Mono<UserAccountDTO> getAccountDetails(Principal principal) {
         log.debug("REST request to get User account details, principal {}", principal);
-        if (isAuthenticatedUser(principal)) {
+        if (principal instanceof AbstractAuthenticationToken) {
             return userService.getUserFromAuthentication((AbstractAuthenticationToken) principal);
         } else {
             throw new UserAccountDetailsException(messageSource.getMessage(
                     "account.notfound", null, LocaleContextHolder.getLocale()));
         }
-    }
-
-    /**
-     * Checks whether the provided principal represents an authenticated user.
-     *
-     * @param principal The principal to be checked.
-     * @return True if the principal represents an authenticated user, false
-     *         otherwise.
-     */
-    private boolean isAuthenticatedUser(Principal principal) {
-        return principal instanceof AbstractAuthenticationToken && ((AbstractAuthenticationToken) principal).isAuthenticated();
-    }
-    
+    }    
 }
