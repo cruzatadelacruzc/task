@@ -109,22 +109,34 @@
   </head>
 
   <body>
-    <div class="container">
-      <h1 th:text="#{index.welcome}"></h1>
-      <h2 style="padding-top: 8px; margin-left: 5px" th:text="${name}"></h2>
-    </div>
+    <div th:if="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+      <div class="container">
+        <h1 th:text="#{index.welcome}"></h1>
+        <h2 style="padding-top: 8px; margin-left: 5px" th:text="${name}"></h2>
+      </div>
 
-    <div class="container">
-      <h4 th:text="#{index.email}"></h4>
-      <h5 style="margin-left: 5px" th:text="${email}"></h5>
-    </div>
-    <a th:text="#{index.link}" th:href="@{/graphiql}">Go to GraphIql</a>
+      <div class="container">
+        <h4 th:text="#{index.email}"></h4>
+        <h5 style="margin-left: 5px" th:text="${email}"></h5>
+      </div>
+      <a th:text="#{index.link}" th:href="@{/graphiql}">Go to GraphIql</a>
 
-    <p th:text="#{index.accessToken}">Access Token:</p>
-    <div class="code-block">
-      <pre>
-            <code th:text="${accessToken}"></code>
-        </pre>
+      <p th:text="#{index.accessToken}">Access Token:</p>
+      <div class="code-block">
+        <pre>
+              <code th:text="${accessToken}"></code>
+          </pre>
+      </div>
+    </div>
+    <div th:if="${#arrays.contains(@environment.getActiveProfiles(),'prod')}">
+      <div class="container">
+        <h1 th:text="#{index.welcome}"></h1>
+        <h1 style="color: #751f1f; margin-left: 5px" th:text="'Java ' + ${@environment.getProperty('spring.application.name')} + ' API '"></h1>        
+      </div>
+        <ul>
+          <li th:text="#{index.text.nofrontend}"></li>
+          <li>It is serving REST APIs, under the '/api' URLs.</li>
+        </ul>
     </div>
   </body>
   <script th:inline="javascript">
