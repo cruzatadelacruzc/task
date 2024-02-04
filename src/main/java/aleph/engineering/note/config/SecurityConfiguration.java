@@ -17,7 +17,6 @@ import org.springframework.security.web.server.csrf.ServerCsrfTokenRequestAttrib
 import org.springframework.security.web.server.header.XXssProtectionServerHttpHeadersWriter;
 import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter.ReferrerPolicy;
 import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.Mode;
-import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.zalando.problem.spring.webflux.advice.security.SecurityProblemSupport;
 
 import aleph.engineering.note.web.filter.CsrfCookieFilter;
@@ -56,13 +55,13 @@ public class SecurityConfiguration {
                                     .referrerPolicy(rp -> rp.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
                                     .permissionsPolicy(perm -> perm.policy(PERMISSIONS_POLICY)))                                
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(problemSupport).accessDeniedHandler(problemSupport))                
-                .securityMatcher(new PathPatternParserServerWebExchangeMatcher("/api/**"))
                 .authorizeExchange(request -> request
+                                            .pathMatchers("/").permitAll()
                                             .pathMatchers("/api/management/info").permitAll()
                                             .pathMatchers("/api/management/health").permitAll()
                                             .pathMatchers("/api/management/health/**").permitAll()
                                             .pathMatchers("/api/management/**").authenticated()
-                                            .anyExchange().authenticated())
+                                            .pathMatchers("/api/**").authenticated())
                 .oauth2Login(Customizer.withDefaults())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
