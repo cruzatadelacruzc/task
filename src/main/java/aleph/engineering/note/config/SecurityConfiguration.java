@@ -57,6 +57,7 @@ public class SecurityConfiguration {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(problemSupport).accessDeniedHandler(problemSupport))                
                 .authorizeExchange(request -> request
                                             .pathMatchers("/").permitAll()
+                                            .pathMatchers("/*.*").permitAll()
                                             .pathMatchers("/api/management/info").permitAll()
                                             .pathMatchers("/api/management/health").permitAll()
                                             .pathMatchers("/api/management/health/**").permitAll()
