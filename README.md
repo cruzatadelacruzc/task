@@ -10,6 +10,7 @@ Brief project description or tagline.
 - [Testing and Coverage Setup](#testing-and-coverage-setup)
 - [GraphQL](#graphql)
 - [CI/CD Setup](#cicd-setup)
+- [Metrics and Monitoring](#metrics-and-monitoring)
 
 ## Project Purpose
 
@@ -55,4 +56,32 @@ This project utilizes the JaCoCo plugin to ensure an 85% test coverage. Make sur
 ## CI/CD Setup
 This project is configured for Continuous Integration (CI) and Continuous Deployment (CD) using GitHub Actions and Railway PaaS.
 
+## Metrics and Monitoring
 
+This project utilizes Spring Boot Actuator to provide insights into the application's metrics and monitoring. Actuator exposes various endpoints that allow you to monitor the health, information, and metrics of your application.
+
+### Actuator Endpoints
+
+#### Without Authentication
+
+- **Health Endpoint:**
+  - [GET request - route `/management/health`](https://task-production-6048.up.railway.app/management/health)
+  - Provides basic health information about the application.
+
+- **Info Endpoint:**
+  - [GET request - route `/management/info`](https://task-production-6048.up.railway.app/management/info)
+  - Offers additional information about the application.
+
+  - **Metrics Endpoint:**
+  - [GET request - route `/management/metrics`](https://task-production-6048.up.railway.app/management/metrics)
+  - Displays various metrics related to the application.
+
+  #### Under Authentication
+  
+  - **Authenticated Metrics Endpoint:**
+  - [GET request - route `/management/metrics`](https://task-production-6048.up.railway.app/management/metrics)
+  - Provides detailed metrics accessible only to authenticated users.
+
+  - **Authenticated Prometheus Endpoint:**
+  - [GET request - route `/management/prometheus`](https://task-production-6048.up.railway.app/management/prometheus)
+  - Offers Prometheus metrics with additional details for authenticated users.  
