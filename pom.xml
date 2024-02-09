@@ -263,7 +263,7 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>dev</id>
+			<id>local</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -311,6 +311,61 @@
 						</plugin>
 					</plugins>
 				</pluginManagement>
+			</build>
+			<properties>
+				<!-- default Spring profiles -->
+				<spring.profiles.active>local</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<build>
+			<pluginManagement>
+					<plugins>
+						<plugin>
+							<artifactId>maven-failsafe-plugin</artifactId>
+							<version>${maven-failsafe-plugin.version}</version>
+							<configuration>
+								<runOrder>alphabetical</runOrder>
+								<includes>
+									<include>**/*IT*</include>
+									<include>**/*IntTest*</include>
+								</includes>
+							</configuration>
+							<executions>
+								<execution>
+									<id>integration-test</id>
+									<goals>
+										<goal>integration-test</goal>
+									</goals>
+								</execution>
+								<execution>
+									<id>verify</id>
+									<goals>
+										<goal>verify</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>build-info</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>io.github.git-commit-id</groupId>
+						<artifactId>git-commit-id-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
 			</build>
 			<properties>
 				<!-- default Spring profiles -->

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Profile("dev")
+@Profile({"dev", "local"})
 @Controller
 public class InfoController {
     private static final Logger log = LoggerFactory.getLogger(InfoController.class);

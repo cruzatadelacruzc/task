@@ -109,7 +109,7 @@
   </head>
 
   <body>
-    <div th:if="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    <div th:if="${!#arrays.contains(@environment.getActiveProfiles(),'prod')}">
       <div class="container">
         <h1 th:text="#{index.welcome}"></h1>
         <h2 style="padding-top: 8px; margin-left: 5px" th:text="${name}"></h2>
