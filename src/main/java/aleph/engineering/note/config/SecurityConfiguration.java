@@ -3,9 +3,7 @@ package aleph.engineering.note.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -15,9 +13,13 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import org.springframework.security.web.server.csrf.ServerCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.server.header.XXssProtectionServerHttpHeadersWriter;
+import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
 import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter.ReferrerPolicy;
 import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.Mode;
 import org.zalando.problem.spring.webflux.advice.security.SecurityProblemSupport;
+
+import static org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers;
 
 import aleph.engineering.note.web.filter.CsrfCookieFilter;
 
@@ -37,10 +39,11 @@ public class SecurityConfiguration {
         this.appProperties = appProperties;
     }
 
-    @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
     public SecurityWebFilterChain apiSecurityFilterChain(ServerHttpSecurity http) throws Exception {
         return http
+                .securityMatcher(new NegatedServerWebExchangeMatcher(new OrServerWebExchangeMatcher(
+                        pathMatchers( "/graphiql/**"), pathMatchers(HttpMethod.OPTIONS, "/**"))))
                 .cors(Customizer.withDefaults())                                                           
                 // See https://stackoverflow.com/q/74447118/65681                                          
                 .csrf(csrf -> csrf.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse())
@@ -55,26 +58,16 @@ public class SecurityConfiguration {
                                     .referrerPolicy(rp -> rp.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
                                     .permissionsPolicy(perm -> perm.policy(PERMISSIONS_POLICY)))                                
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(problemSupport).accessDeniedHandler(problemSupport))                
-                .authorizeExchange(request -> request
-                                            .pathMatchers("/").permitAll()
-                                            .pathMatchers("/*.*").permitAll()
-                                            .pathMatchers("/api/management/info").permitAll()
-                                            .pathMatchers("/api/management/health").permitAll()
-                                            .pathMatchers("/api/management/health/**").permitAll()
-                                            .pathMatchers("/api/management/**").authenticated()
-                                            .pathMatchers("/api/**").authenticated())
+                .authorizeExchange(request -> request                                            
+                                            .pathMatchers("/", "/*.*").permitAll()
+                                            .pathMatchers("/management/info").permitAll()
+                                            .pathMatchers("/management/health").permitAll()
+                                            .pathMatchers("/management/health/**").permitAll()
+                                            .pathMatchers("/management/**").authenticated()
+                                            .pathMatchers("/api/**").authenticated()
+                                            .anyExchange().authenticated())
                 .oauth2Login(Customizer.withDefaults())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }
-
-    @Profile("dev")
-    @Bean
-    SecurityWebFilterChain webHttpSecurity(ServerHttpSecurity http) {                       
-        http
-            .authorizeExchange((exchanges) -> exchanges.anyExchange().authenticated())
-            .oauth2Login(Customizer.withDefaults());                                         
-        return http.build();
-    }
-
 }
