@@ -16,13 +16,11 @@ import org.springframework.graphql.test.tester.GraphQlTester;
 import aleph.engineering.note.IntegrationTest;
 import aleph.engineering.note.domain.Task;
 import aleph.engineering.note.repositories.TaskRepository;
-import aleph.engineering.note.security.AuthoritiesConstants;
 import aleph.engineering.note.web.error.ErrorConstants;
 import reactor.core.publisher.Mono;
 import java.util.Map;
 import java.util.Objects;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * Integration tests for the {@link TaskController} REST controller.
