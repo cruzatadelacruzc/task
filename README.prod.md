@@ -1,11 +1,6 @@
-# TASK
-
-API for a technical test.
-- **Profile active: Development**
-
 ## Table of Contents
 
-- [Project Purpose](#project-purpose)
+- [Environment](#environment)
 - [Getting Started](#getting-started)
 - [Security Configuration](#security-configuration-for-api-with-google-oauth2-oidc-integration)
 - [Testing and Coverage Setup](#testing-and-coverage-setup)
@@ -13,27 +8,27 @@ API for a technical test.
 - [CI/CD Setup](#cicd-setup)
 - [Metrics and Monitoring](#metrics-and-monitoring)
 
-## Project Purpose
+## environment
 
-The purpose of this project is to store task information, focusing on the note body associated with each task. Developed using Spring Boot WebFlux.
+- **Profile active: Production**
 
 ## Getting Started
 #### API Information
 ##### Base URL
-- [Base URL](task-development.up.railway.app/)
+- [Base URL](https://task-production-6048.up.railway.app/)
 
 #### Authentication
 To authenticate, use the following URL:
-- [Authentication URL](task-development.up.railway.app/oauth2/authorization/google)
+- [Authentication URL](https://task-production-6048.up.railway.app/oauth2/authorization/google)
 
 #### Resource Consumption
 For consuming API resources, use the following URL:
-- [GraphQL path:  */api/graphql*](task-development.up.railway.app/api/graphql)
+- [GraphQL path:  */api/graphql*](https://task-production-6048.up.railway.app/api/graphql)
 
 
 #### Account service
 To obtain account information for the authenticated user, use the following URL:
-- [GET request - route */api/account*](task-development.up.railway.app/api/account)
+- [GET request - route */api/account*](https://task-production-6048.up.railway.app/api/account)
 
 
 ## Security Configuration for API with Google OAuth2 OIDC Integration
@@ -66,23 +61,23 @@ This project utilizes Spring Boot Actuator to provide insights into the applicat
 #### Without Authentication
 
 - **Health Endpoint:**
-  - [GET request - route `/management/health`](task-development.up.railway.app/management/health)
+  - [GET request - route `/management/health`](https://task-production-6048.up.railway.app/management/health)
   - Provides basic health information about the application.
 
 - **Info Endpoint:**
-  - [GET request - route `/management/info`](task-development.up.railway.app/management/info)
+  - [GET request - route `/management/info`](https://task-production-6048.up.railway.app/management/info)
   - Offers additional information about the application.
 
   - **Metrics Endpoint:**
-  - [GET request - route `/management/metrics`](task-development.up.railway.app/management/metrics)
+  - [GET request - route `/management/metrics`](https://task-production-6048.up.railway.app/management/metrics)
   - Displays various metrics related to the application.
 
   #### Under Authentication
   
   - **Authenticated Metrics Endpoint:**
-  - [GET request - route `/management/metrics`](task-development.up.railway.app/management/metrics)
+  - [GET request - route `/management/metrics`](https://task-production-6048.up.railway.app/management/metrics)
   - Provides detailed metrics accessible only to authenticated users.
 
   - **Authenticated Prometheus Endpoint:**
-  - [GET request - route `/management/prometheus`](task-development.up.railway.app/management/prometheus)
+  - [GET request - route `/management/prometheus`](https://task-production-6048.up.railway.app/management/prometheus)
   - Offers Prometheus metrics with additional details for authenticated users.  
