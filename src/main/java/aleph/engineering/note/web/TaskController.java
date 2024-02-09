@@ -43,7 +43,6 @@ public class TaskController {
      * @throws ItemNotFoundException If the task is not found.
      */
     @QueryMapping
-    @PreAuthorize("hasAuthority('" + AuthoritiesConstants.TASK_READ + "')")
     Mono<Task> task(@Argument String id) {
         log.debug("REST request to get Task : {}", id);
         return service.getTask(id).switchIfEmpty(Mono.error(
@@ -57,7 +56,6 @@ public class TaskController {
      * @return A list of all tasks.
      */
     @QueryMapping
-    @PreAuthorize("hasAuthority('" + AuthoritiesConstants.TASK_READ + "')")
     Flux<Task> tasks() {
         log.debug("REST request to getAll Tasks");
         return service.getAll();
@@ -71,7 +69,6 @@ public class TaskController {
      * @throws BadRequestAlertException If the provided ID is not null.
      */
     @MutationMapping
-    @PreAuthorize("hasAuthority('" + AuthoritiesConstants.TASK_WRITE + "')")
     Mono<Task> create(@Argument @Valid TaskInput input) {
         log.debug("REST request to create a Task, body {}", input.body());
         if (input.id() != null) {
@@ -91,7 +88,6 @@ public class TaskController {
      * @throws BadRequestAlertException If the provided ID is null.
      */
     @MutationMapping
-    @PreAuthorize("hasAuthority('" + AuthoritiesConstants.TASK_EDIT + "')")
     Mono<Task> edit(@Argument @Valid TaskInput input) {
         log.debug("REST request to edit a Task, body {}", input.body());
         if (input.id() == null) {

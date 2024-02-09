@@ -39,24 +39,9 @@ public class TaskControllerIT {
 
 
 	@Autowired
-    private GraphQlTester graphQlTester;
+    private GraphQlTester graphQlTester; 
 
    @Test
-   @WithMockUser(authorities = {"TASK_ANY"})
-   void testAddTaskWrongAuthorityReturnsForbidden () {
-       this.graphQlTester.document("mutation { create(input: { body: \"" + BODY + "\" }) { id body } }")
-        .execute()
-        .errors()
-            .expect(error -> {                           
-                Assertions.assertTrue(Objects.requireNonNullElse(error.getMessage(), "").contains(HttpStatus.FORBIDDEN.getReasonPhrase()));
-                Assertions.assertEquals(ErrorType.FORBIDDEN, error.getErrorType());
-                return true;
-            })
-            .verify();
-   } 
-
-   @Test
-   @WithMockUser(authorities = {AuthoritiesConstants.TASK_WRITE})
    void addTask () {
        Task task = this.graphQlTester
        .document("mutation { create(input: { body: \"" + BODY + "\" }) { id body } }")
@@ -71,7 +56,6 @@ public class TaskControllerIT {
    }
 
    @Test
-   @WithMockUser(authorities = {AuthoritiesConstants.TASK_EDIT})
    void editTask () {
        Mono<Task> savedTaskMono = repository.save(new Task(null, BODY));
        Task savedTask = savedTaskMono.block();
@@ -92,7 +76,6 @@ public class TaskControllerIT {
    }
 
    @Test
-   @WithMockUser(authorities = {AuthoritiesConstants.TASK_READ})
    void getTaskById() {
        Task task = new Task(null, BODY);
        Mono<Task> savedTaskMono = repository.save(task);
@@ -113,7 +96,6 @@ public class TaskControllerIT {
    }
 
    @Test
-   @WithMockUser(authorities = {AuthoritiesConstants.TASK_READ})
    void getTasks() {
        List<Task> tasks = new ArrayList<>();
        int numberOfTasks = 10;
@@ -183,7 +165,6 @@ public class TaskControllerIT {
     }
 
     @Test
-    @WithMockUser(authorities = {AuthoritiesConstants.TASK_WRITE})
     void shouldReturnIDExistisToCreate () {
 
         this.graphQlTester.document("mutation { create(input: { id: \"" + 1 + "\", body: \"" + BODY + "\" } ) { id body } }")
@@ -206,7 +187,6 @@ public class TaskControllerIT {
     }
 
     @Test
-    @WithMockUser(authorities = {AuthoritiesConstants.TASK_READ})
     void shouldReturnItemNotFound () {
 
         this.graphQlTester.document("{ task(id: \"" + 12 + "\") { id body } }")
@@ -229,7 +209,6 @@ public class TaskControllerIT {
     }
 
     @Test
-    @WithMockUser(authorities = {AuthoritiesConstants.TASK_WRITE})
     void shouldReturnErrorEmptyBodyToEdit () {
 
         this.graphQlTester.document("mutation { edit(input : { body: \"\" }) { id body } }")
@@ -267,7 +246,6 @@ public class TaskControllerIT {
     }
 
     @Test
-    @WithMockUser(authorities = {AuthoritiesConstants.TASK_EDIT})
     void shouldReturnIDNotExistisToEdit () {
 
         this.graphQlTester.document("mutation { edit(input: { body: \"" + BODY + "\" } ) { id body } }")
