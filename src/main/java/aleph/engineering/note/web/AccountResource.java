@@ -1,6 +1,7 @@
 package aleph.engineering.note.web;
 
 import java.security.Principal;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +47,11 @@ public class AccountResource {
     @GetMapping("/api/account")
     public Mono<UserAccountDTO> getAccountDetails(Principal principal) {
         log.debug("REST request to get User account details, principal {}", principal);
-        if (principal instanceof AbstractAuthenticationToken) {
-            return userService.getUserFromAuthentication((AbstractAuthenticationToken) principal);
-        } else {
-            throw new UserAccountDetailsException(messageSource.getMessage(
-                    "account.notfound", null, LocaleContextHolder.getLocale()));
+        if (principal instanceof AbstractAuthenticationToken abstractAuthToken) {
+            return userService.getUserFromAuthentication(abstractAuthToken);
         }
+        
+        throw new UserAccountDetailsException(messageSource.getMessage(
+                "account.notfound", null, LocaleContextHolder.getLocale()));
     }    
 }

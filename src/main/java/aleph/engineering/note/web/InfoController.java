@@ -21,10 +21,9 @@ public class InfoController {
     @GetMapping("/")
     public String getInfo(Principal principal, Model model) {
         log.debug("REST request to get Info, Principal {}", principal);
-        if (principal instanceof OAuth2AuthenticationToken) {
-            OAuth2AuthenticationToken oauth2Auth = (OAuth2AuthenticationToken) principal;
-
+        if (principal instanceof OAuth2AuthenticationToken oauth2Auth) {
             OAuth2User oauth2User = oauth2Auth.getPrincipal();
+
             String name = oauth2User.getAttribute("name");
             String email = oauth2User.getAttribute("email");
     
